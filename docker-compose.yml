@@ -1,13 +1,13 @@
 services:
   app:
     container_name: laravel-template-app
-    build: ./docker/app
+    build: ./.docker/app
     volumes:
       - ./:/var/www/html
 
   nginx:
     container_name: laravel-template-nginx
-    build: ./docker/nginx
+    build: ./.docker/nginx
     ports:
       - 8080:80
     depends_on:
@@ -21,8 +21,8 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./docker/mysql/data:/var/lib/mysql
-      - ./docker/mysql/my.cnf:/etc/msql/conf.d
+      - ./.docker/mysql/data:/var/lib/mysql
+      - ./.docker/mysql/my.cnf:/etc/msql/conf.d
     environment:
       MYSQL_DATABASE: laravel_template
       MYSQL_USER: laravel_template
