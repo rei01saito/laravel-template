@@ -18,6 +18,6 @@ RUN apt-get update && \
     vim \
     && docker-php-ext-install pdo_mysql bcmath
 
-RUN apt-get -y install nodejs npm && npm install n -g && n 12.14
+RUN apt-get -y install nodejs npm && npm install -g n && n 16.17
 
 WORKDIR /var/www/html

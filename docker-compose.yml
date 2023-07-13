@@ -16,7 +16,7 @@ services:
       - ./:/var/www/html
   
   mysql:
-    container_name: laravel_template-mysql
+    container_name: laravel-template-mysql
     image: mysql:8.0
     ports:
       - 3306:3306
@@ -29,3 +29,29 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
       TZ: 'Asia/Tokyo'
+  
+  minio:
+    container_name: laravel-template-minio
+    image: minio/minio
+    ports:
+      - 9000:9999
+      - 9001:9001
+    environment:
+      - MINIO_ACCESS_KEY=access_key
+      - MINIO_SECRET_KEY=secret_key
+    command: server /export --address :9000 --console-address :9001
+  
+  create-buckets:
+    image: minio/mc
+    container_name: laravel-template-create-buckets
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 access_key secret_key;
+      /usr/bin/mc mb myminio/public --region=ap-northeast-1;
+      /usr/bin/mc mb myminio/private --region=ap-northeast-1;
+      /usr/bin/mc policy set public myminio/public;
+      /usr/bin/mc policy set private myminio/private;
+      exit 0;
+      "

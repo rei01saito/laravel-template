@@ -1,3 +1,14 @@
+.PHONY: app
+
+# initialize
+init:
+	@make build
+	@make up
+	docker-compose exec app bash -c "chown -R www-data:www-data storage"
+	docker-compose exec app bash -c "composer install"
+	docker-compose exec app bash -c "cp .env.example .env"
+	docker-compose exec app bash -c "php artisan key:generate"
+
 # container
 build:
 	docker-compose build --no-cache
